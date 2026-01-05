@@ -1,65 +1,251 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
-export default function Home() {
+/* ================== UNITS BY GRADE (GLOBAL SUCCESS 10–12) ================== */
+const unitsByGrade: Record<string, string[]> = {
+  "10": [
+    "Unit 1: Family Life",
+    "Unit 2: Humans and the Environment",
+    "Unit 3: Music",
+    "Unit 4: For a Better Community",
+    "Unit 5: Inventions",
+    "Unit 6: Gender Equality",
+    "Unit 7: Viet Nam and International Organisations",
+    "Unit 8: New Ways to Learn",
+    "Unit 9: Protecting the Environment",
+    "Unit 10: Ecotourism",
+    "Review Units (1–4)",
+  ],
+  "11": [
+    "Unit 1: A Long and Healthy Life",
+    "Unit 2: The Generation Gap",
+    "Unit 3: Cities of the Future",
+    "Review 1",
+    "Unit 4: ASEAN and Viet Nam",
+    "Unit 5: Global Warming",
+    "Review 2",
+    "Unit 6: Preserving Our Heritage",
+    "Unit 7: Education Options for School-Leavers",
+    "Unit 8: Becoming Independent",
+    "Review 3",
+    "Unit 9: Social Issues",
+    "Unit 10: The Ecosystem",
+    "Review 4",
+  ],
+  "12": [
+    "Unit 1: Life Stories We Admire",
+    "Unit 2: A Multicultural World",
+    "Unit 3: Green Living",
+    "Review 1",
+    "Unit 4: Urbanisation",
+    "Unit 5: The World of Work",
+    "Review 2",
+    "Unit 6: Artificial Intelligence",
+    "Unit 7: The World of Mass Media",
+    "Unit 8: Wildlife Conservation",
+    "Review 3",
+    "Unit 9: Career Paths",
+    "Unit 10: Lifelong Learning",
+    "Review 4",
+  ],
+};
+
+type Skill =
+  | "Vocabulary"
+  | "Grammar"
+  | "Getting Started"
+  | "Reading"
+  | "Speaking"
+  | "Listening"
+  | "Writing"
+  | "Communication & Culture / CLIL"
+  | "Looking Back + Project";
+
+export default function Page() {
+  const [grade, setGrade] = useState("10");
+  const [unit, setUnit] = useState("");
+  const [skill, setSkill] = useState<Skill>("Vocabulary");
+  const [copied, setCopied] = useState(false);
+
+  const generatePrompt = async () => {
+    if (!unit) {
+      alert("Please select a unit.");
+      return;
+    }
+
+    const skillLogic: Record<Skill, string> = {
+      Vocabulary: `
+Create a VOCABULARY WORKSHEET with academic depth.
+Include presentation, controlled practice, contextualised use.
+Assessment focus: accuracy, meaning, exam-oriented usage.
+`,
+      Grammar: `
+Create a GRAMMAR PRACTICE WORKSHEET.
+Include form–use–meaning explanation, comparison if needed,
+controlled → guided → contextualised practice.
+Assessment focus: accuracy and application.
+`,
+      "Getting Started": `
+Create an INTRODUCTORY ACTIVITY SHEET.
+Include lead-in visuals, prediction tasks, short listening/reading,
+and initial discussion to activate background knowledge.
+`,
+      Reading: `
+Create a READING COMPREHENSION WORKSHEET.
+Include pre-reading, skimming, scanning, inference,
+and post-reading discussion.
+Assessment focus: main ideas, details, strategies.
+`,
+      Speaking: `
+Create a SPEAKING PRACTICE WORKSHEET.
+Include preparation, guided interaction, freer speaking,
+and optional support.
+Assessment focus: fluency, pronunciation, coherence.
+`,
+      Listening: `
+Create a LISTENING COMPREHENSION WORKSHEET.
+Include pre-listening, gist/detail listening tasks,
+and post-listening reflection.
+`,
+      Writing: `
+Create a WRITING TASK WORKSHEET.
+Include model text, language focus, guided writing,
+independent task, and checklist.
+Assessment focus: organisation, accuracy, task fulfilment.
+`,
+      "Communication & Culture / CLIL": `
+Create an INTEGRATED CONTENT–LANGUAGE WORKSHEET.
+Include cultural or CLIL content, comprehension,
+comparison, and application task.
+`,
+      "Looking Back + Project": `
+Create a REVIEW AND PROJECT WORKSHEET.
+Include language & skills review, project steps,
+and optional self/peer assessment.
+`,
+    };
+
+    const prompt = `
+You are Mr. Cảnh’s AI Teaching Assistant, specializing in designing
+high-quality, visual, and interactive English learning materials
+for Vietnamese upper secondary students (Grades 10–12).
+
+Aligned with the MOET Global Success curriculum (CTGDPT 2018),
+competency-based teaching and assessment,
+and THPTQG orientation.
+
+GRADE: ${grade}
+SUBJECT: English (Upper Secondary – Vietnam)
+UNIT: ${unit}
+SKILL FOCUS: ${skill}
+
+TASK:
+${skillLogic[skill]}
+
+DESIGN & INTERACTION:
+- Large fonts, clear hierarchy
+- Canva-style cards
+- Explanations before practice
+- Interactive quizzes
+  ✓ Correct → GREEN
+  ✗ Incorrect → RED
+- Friendly feedback
+
+PEDAGOGICAL ALIGNMENT:
+Communicative, linguistic, strategic, and intercultural competence.
+
+TEACHER INFO:
+Name: CANH IT
+Contact: 0988 809 539
+School: Ba Trang Primary & Secondary Boarding School
+Address: Đặng Thùy Trâm Commune, Quang Ngai Province
+
+USAGE:
+Classroom, homework, self-study, Canva AI & Canva Code.
+`.trim();
+
+    await navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main style={{ maxWidth: 1000, margin: "40px auto", fontFamily: "Arial" }}>
+      {/* HERO */}
+      <header style={{ textAlign: "center", marginBottom: 40 }}>
+        <h1>🎓 Mr. Cảnh’s AI Teaching Assistant</h1>
+        <p>
+          High-Quality English Learning Materials | Grades 10–12 | Global Success
+        </p>
+        <div style={{ background: "#eef2ff", padding: 12, borderRadius: 6 }}>
+          👉 Click to customize your lesson. No typing required.
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </header>
+
+      {/* STEP 1 */}
+      <label>STEP 1 — Choose Grade</label>
+      <select
+        value={grade}
+        onChange={(e) => {
+          setGrade(e.target.value);
+          setUnit("");
+        }}
+        style={{ width: "100%", padding: 10 }}
+      >
+        <option value="10">Grade 10</option>
+        <option value="11">Grade 11</option>
+        <option value="12">Grade 12</option>
+      </select>
+
+      {/* STEP 2 */}
+      <label style={{ marginTop: 16, display: "block" }}>
+        STEP 2 — Choose Unit
+      </label>
+      <select
+        value={unit}
+        onChange={(e) => setUnit(e.target.value)}
+        style={{ width: "100%", padding: 10 }}
+      >
+        <option value="">-- Select a unit --</option>
+        {unitsByGrade[grade].map((u) => (
+          <option key={u} value={u}>
+            {u}
+          </option>
+        ))}
+      </select>
+
+      {/* STEP 3 */}
+      <label style={{ marginTop: 16, display: "block" }}>
+        STEP 3 — Choose Skill Focus
+      </label>
+      <select
+        value={skill}
+        onChange={(e) => setSkill(e.target.value as Skill)}
+        style={{ width: "100%", padding: 10 }}
+      >
+        {Object.keys(skillLogic ?? {}).map((s) => (
+          <option key={s}>{s}</option>
+        ))}
+      </select>
+
+      {/* CTA */}
+      <button
+        onClick={generatePrompt}
+        style={{
+          marginTop: 30,
+          width: "100%",
+          padding: "16px",
+          fontSize: 18,
+          background: copied ? "#16a34a" : "#1e3a8a",
+          color: "white",
+          border: "none",
+          borderRadius: 8,
+        }}
+      >
+        {copied
+          ? "✔ LESSON GENERATED & COPIED"
+          : "🎯 GENERATE MY LESSON MATERIAL"}
+      </button>
+    </main>
   );
 }
